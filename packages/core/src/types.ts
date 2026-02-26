@@ -30,3 +30,11 @@ export interface Subtask {
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
   result?: string;
 }
+
+export interface ChannelAdapter {
+  name: string;
+  start(): Promise<void>;
+  stop(): Promise<void>;
+  sendMessage(channelId: string, message: string): Promise<void>;
+  onMessage(handler: (message: Message) => Promise<void>): void;
+}

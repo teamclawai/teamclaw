@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@teamclaw/config": "workspace:*",
+    "@teamclaw/agent": "workspace:*",
+    "@teamclaw/memory": "workspace:*",
     "zod": "^3.24.0"
   },
   "devDependencies": {
