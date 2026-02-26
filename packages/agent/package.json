@@ -1,0 +1,20 @@
+{
+  "name": "@teamclaw/agent",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "check": "eslint src && tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@teamclaw/config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "vitest": "^2.0.0"
+  }
+}
