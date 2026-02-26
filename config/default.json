@@ -1,0 +1,20 @@
+{
+  "agents": {},
+  "channels": {
+    "web": {
+      "type": "web",
+      "enabled": true,
+      "config": {
+        "port": 3000
+      }
+    }
+  },
+  "providers": {
+    "openrouter": {
+      "apiKey": ""
+    }
+  },
+  "memory": {
+    "lanceDbPath": "./data/memory"
+  }
+}
