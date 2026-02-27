@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  teamclaw:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "12345:12345"
+    volumes:
+      - ./config:/app/config:ro
+      - teamclaw-data:/app/data
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:12345"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  teamclaw-data:
