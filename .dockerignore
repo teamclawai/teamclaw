@@ -1,12 +1,29 @@
+# Dependencies (need these for build)
 node_modules
+packages/*/node_modules
+
+# Build outputs
 .next
 dist
+packages/*/dist
+packages/*/.next
+
+# Git
 .git
+.gitignore
+
+# Docs
 *.md
 docs
+
+# Config with secrets
 .env
 .env.local
+
+# IDE
 .eslintrc.js
 biome.json
-tsconfig*.json
-!packages/*/tsconfig.json
+
+# Build/test
+vitest.config.ts
+.eslintrc.js
