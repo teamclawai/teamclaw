@@ -1,15 +1,18 @@
 import { NextResponse } from 'next/server';
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
+import { createHash } from 'crypto';
+
+function hashPassword(password: string): string {
+  return createHash('sha256').update(password).digest('hex');
+}
 
 export async function GET() {
   const configPath = join(process.cwd(), 'config/local.json');
   const defaultPath = join(process.cwd(), 'config/default.json');
   
   const hasLocal = existsSync(configPath);
-  const hasApiKey = existsSync(configPath) 
-    ? JSON.parse(readFileSync(configPath, 'utf-8')).providers?.openrouter?.apiKey?.length > 0
-    : false;
+  const hasApiKey = hasLocal && JSON.parse(readFileSync(configPath, 'utf-8')).providers?.openrouter?.apiKey?.length > 0;
   
   const defaultConfig = existsSync(defaultPath) 
     ? JSON.parse(readFileSync(defaultPath, 'utf-8'))
@@ -62,7 +65,7 @@ export async function POST(request: Request) {
         lanceDbPath: "./data/memory"
       },
       admin: {
-        password: ""
+        passwordHash: ""
       }
     };
     
@@ -70,8 +73,9 @@ export async function POST(request: Request) {
       baseConfig = JSON.parse(readFileSync(defaultPath, 'utf-8'));
     }
     
+    const passwordHash = hashPassword(adminPassword);
     baseConfig.providers.openrouter.apiKey = apiKey;
-    baseConfig.admin = { password: adminPassword };
+    baseConfig.admin = { passwordHash };
     if (domain) {
       (baseConfig as any).domain = domain;
     }

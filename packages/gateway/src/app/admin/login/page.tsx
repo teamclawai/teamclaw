@@ -21,11 +21,13 @@ export default function LoginPage() {
         body: JSON.stringify({ password })
       });
       
-      if (res.ok) {
-        document.cookie = 'admin_token=authenticated; path=/';
+      const data = await res.json();
+      
+      if (data.success) {
+        document.cookie = `admin_token=${data.token}; path=/; max-age=86400`;
         router.push('/admin/dashboard');
       } else {
-        setError('Invalid password');
+        setError(data.error || 'Invalid password');
       }
     } catch (err) {
       setError('Login failed');

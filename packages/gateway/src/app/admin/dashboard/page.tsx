@@ -18,6 +18,11 @@ export default function DashboardPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const handleLogout = () => {
+    document.cookie = 'admin_token=; path=/; max-age=0';
+    router.push('/admin/login');
+  };
+
   if (loading) {
     return (
       <div style={{ padding: '40px', textAlign: 'center' }}>
@@ -32,7 +37,7 @@ export default function DashboardPage() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>TeamClaw Admin</h1>
           <button
-            onClick={() => router.push('/')}
+            onClick={handleLogout}
             style={{ padding: '8px 16px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
           >
             Logout
