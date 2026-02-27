@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+.git
+*.md
+docs
+.env
+.env.local
+.eslintrc.js
+biome.json
+tsconfig*.json
+!packages/*/tsconfig.json

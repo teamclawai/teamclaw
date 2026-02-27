@@ -5,7 +5,7 @@
       "type": "web",
       "enabled": true,
       "config": {
-        "port": 3000
+        "port": 12345
       }
     }
   },

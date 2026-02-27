@@ -1,0 +1,38 @@
+{
+  "agents": {
+    "dev": {
+      "id": "dev",
+      "name": "Developer",
+      "description": "Can write and review code",
+      "model": "anthropic/claude-3.5-sonnet",
+      "provider": "openrouter",
+      "skills": ["file", "shell"]
+    },
+    "review": {
+      "id": "review",
+      "name": "Code Reviewer",
+      "description": "Reviews code changes",
+      "model": "anthropic/claude-3.5-sonnet",
+      "provider": "openrouter",
+      "skills": ["file"]
+    }
+  },
+  "channels": {
+    "web": {
+      "type": "web",
+      "enabled": true,
+      "config": {
+        "port": 12345
+      }
+    }
+  },
+  "providers": {
+    "openrouter": {
+      "apiKey": "YOUR_OPENROUTER_API_KEY_HERE",
+      "apiBase": "https://openrouter.ai/api/v1"
+    }
+  },
+  "memory": {
+    "lanceDbPath": "./data/memory"
+  }
+}
