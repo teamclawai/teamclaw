@@ -1,7 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
+
+const OPENROUTER_MODELS = [
+  { id: 'openai/gpt-4o', name: 'GPT-4o', description: 'OpenAI\'s flagship model' },
+  { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', description: 'Fast & affordable' },
+  { id: 'openai/gpt-4-turbo', name: 'GPT-4 Turbo', description: 'Previous flagship' },
+  { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', description: 'Anthropic\'s best model' },
+  { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', description: 'Fast & affordable' },
+  { id: 'google/gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash', description: 'Google\'s latest' },
+  { id: 'google/gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Google\'s pro model' },
+  { id: 'google/gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Google\'s fast model' },
+  { id: 'meta-llama/llama-3.1-405b-instruct', name: 'Llama 3.1 405B', description: 'Meta\'s largest' },
+  { id: 'meta-llama/llama-3.1-70b-instruct', name: 'Llama 3.1 70B', description: 'Meta\'s balanced' },
+  { id: 'mistralai/mistral-large', name: 'Mistral Large', description: 'Mistral\'s flagship' },
+  { id: 'mistralai/mistral-small', name: 'Mistral Small', description: 'Mistral\'s fast model' },
+  { id: 'qwen/qwen-2-72b-instruct', name: 'Qwen 2 72B', description: 'Alibaba\'s model' },
+  { id: 'cohere/command-r-plus', name: 'Command R+', description: 'Cohere\'s flagship' },
+];
 
 export default function SetupPage() {
   const router = useRouter();
@@ -9,6 +31,7 @@ export default function SetupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [domain, setDomain] = useState('');
+  const [model, setModel] = useState('openai/gpt-4o-mini');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,13 +49,18 @@ export default function SetupPage() {
       return;
     }
     
+    if (!apiKey || apiKey.length < 10) {
+      setError('Please enter a valid API key');
+      return;
+    }
+    
     setLoading(true);
     
     try {
       const res = await fetch('/api/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey, adminPassword: password, domain })
+        body: JSON.stringify({ apiKey, adminPassword: password, domain, model })
       });
       
       const data = await res.json();
@@ -50,160 +78,115 @@ export default function SetupPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-      padding: '20px'
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '40px',
-        maxWidth: '500px',
-        width: '100%',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px', color: '#1a1a2e' }}>
-            🚀 TeamClaw Setup
-          </h1>
-          <p style={{ color: '#6b7280' }}>
-            Configure your multi-agent platform
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className="w-full max-w-lg">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4">
+            <Sparkles className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-white">TeamClaw Setup</h1>
+          <p className="text-slate-400 mt-2">Configure your multi-agent platform</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#374151' }}>
-              OpenRouter API Key *
-            </label>
-            <input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="sk-or-..."
-              required
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-            <p style={{ marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
-              Get free API key at{' '}
-              <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6' }}>
-                openrouter.ai
-              </a>
-            </p>
-          </div>
+        <Card className="shadow-2xl">
+          <CardHeader>
+            <CardTitle>Initial Setup</CardTitle>
+            <CardDescription>Enter your configuration details to get started</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="apiKey">OpenRouter API Key *</Label>
+                <Input
+                  id="apiKey"
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="sk-or-..."
+                  required
+                />
+                <p className="text-xs text-slate-500">
+                  Get a free API key at{' '}
+                  <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    openrouter.ai
+                  </a>
+                </p>
+              </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#374151' }}>
-              Admin Password *
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
-              required
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="model">AI Model</Label>
+                <select
+                  id="model"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="flex h-10 w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                >
+                  {OPENROUTER_MODELS.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} - {m.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#374151' }}>
-              Confirm Password *
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              required
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Admin Password *</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                  required
+                />
+              </div>
 
-          <div style={{ marginBottom: '32px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#374151' }}>
-              Domain (optional)
-            </label>
-            <input
-              type="text"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
-              placeholder="https://teamclaw.yourdomain.com"
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-            <p style={{ marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
-              Your VPS domain for external access
-            </p>
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password *</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your password"
+                  required
+                />
+              </div>
 
-          {error && (
-            <div style={{
-              padding: '12px 16px',
-              background: '#fee2e2',
-              borderRadius: '8px',
-              color: '#dc2626',
-              marginBottom: '24px',
-              fontSize: '14px'
-            }}>
-              {error}
-            </div>
-          )}
+              <div className="space-y-2">
+                <Label htmlFor="domain">Domain (optional)</Label>
+                <Input
+                  id="domain"
+                  type="text"
+                  value={domain}
+                  onChange={(e) => setDomain(e.target.value)}
+                  placeholder="https://teamclaw.yourdomain.com"
+                />
+                <p className="text-xs text-slate-500">
+                  Your VPS domain for external access
+                </p>
+              </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              padding: '14px',
-              background: loading ? '#9ca3af' : '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'background 0.2s'
-            }}
-          >
-            {loading ? 'Setting up...' : 'Complete Setup'}
-          </button>
-        </form>
+              {error && (
+                <div className="flex items-center gap-2 p-3 border border-red-200 rounded-lg text-red-700 text-sm">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  {error}
+                </div>
+              )}
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Setting up...
+                  </>
+                ) : (
+                  'Complete Setup'
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
