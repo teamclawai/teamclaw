@@ -1,18 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
-packages/*/node_modules
+node_modules/
+packages/*/node_modules/
 
 # testing
 /coverage
 
 # next.js
 .next/
+packages/*/.next/
 out/
-dist
+dist/
+packages/*/dist/
+
 # production
 /build
 
@@ -40,3 +41,9 @@ next-env.d.ts
 # pnpm
 .pnpm-store/
 
+# local config
+config/local.json
+packages/config/local.json
+
+# local data
+packages/gateway/data/

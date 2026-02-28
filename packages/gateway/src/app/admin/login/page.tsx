@@ -25,7 +25,7 @@ export default function LoginPage() {
       
       if (data.success) {
         document.cookie = `admin_token=${data.token}; path=/; max-age=86400`;
-        router.push('/admin/dashboard');
+        router.push('/admin');
       } else {
         setError(data.error || 'Invalid password');
       }

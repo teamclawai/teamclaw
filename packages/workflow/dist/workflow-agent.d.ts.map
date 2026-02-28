@@ -1,1 +1,0 @@
-{"version":3,"file":"workflow-agent.d.ts","sourceRoot":"","sources":["../src/workflow-agent.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAC;AAErD,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,YAAY,CAAC;AAEjD,qBAAa,aAAa;IACxB,OAAO,CAAC,KAAK,CAAgB;gBAEjB,KAAK,EAAE,aAAa;IAI1B,SAAS,CAAC,IAAI,EAAE,MAAM,GAAG,OAAO,CAAC,cAAc,CAAC;IAgBhD,OAAO,IAAI,OAAO,CAAC,cAAc,CAAC;CAMzC"}

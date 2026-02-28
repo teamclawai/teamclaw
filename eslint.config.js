@@ -6,9 +6,11 @@ export default tseslint.config({
   languageOptions: {
     parser: tseslint.parser,
     parserOptions: {
-      project: true,
-      tsconfigRootDir: './',
+      project: './tsconfig.json',
     },
+  },
+  plugins: {
+    '@typescript-eslint': tseslint.plugin,
   },
   rules: {
     '@typescript-eslint/no-unused-vars': 'warn',

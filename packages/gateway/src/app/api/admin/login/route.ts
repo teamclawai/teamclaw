@@ -22,26 +22,41 @@ export async function POST(request: Request) {
     const { password } = body;
     
     const configPath = join(process.cwd(), 'config/local.json');
+    const rootConfigPath = join(process.cwd(), '../config/local.json');
     
-    if (!existsSync(configPath)) {
-      return NextResponse.json({ error: 'Not configured' }, { status: 401 });
+    let config = null;
+    let configSource = '';
+    
+    if (existsSync(configPath)) {
+      config = JSON.parse(readFileSync(configPath, 'utf-8'));
+      configSource = configPath;
+    } else if (existsSync(rootConfigPath)) {
+      config = JSON.parse(readFileSync(rootConfigPath, 'utf-8'));
+      configSource = rootConfigPath;
     }
     
-    const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+    if (!config) {
+      return NextResponse.json({ error: 'Not configured. Please run setup first.' }, { status: 401 });
+    }
+    
     const storedHash = config.admin?.passwordHash;
     
     if (!storedHash) {
-      return NextResponse.json({ error: 'Not configured' }, { status: 401 });
+      return NextResponse.json({ error: 'Not configured. Please run setup first.' }, { status: 401 });
     }
     
     const inputHash = hashPassword(password);
     
     if (constantTimeCompare(storedHash, inputHash)) {
-      return NextResponse.json({ success: true, token: Buffer.from(`${password}:${Date.now()}`).toString('base64') });
+      const token = Buffer.from(`${password}:${Date.now()}`).toString('base64');
+      const response = NextResponse.json({ success: true, token });
+      response.cookies.set('admin_token', token, { path: '/', maxAge: 86400 });
+      return response;
     }
     
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
   } catch (error) {
+    console.error('Login error:', error);
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });
   }
 }
