@@ -1,8 +1,33 @@
 {
   "name": "teamclaw",
   "version": "0.1.0",
+  "description": "Multiple AI agents working together in simple, collaborative chat workspace",
   "private": true,
   "type": "module",
+  "author": "TeamClaw Community",
+  "homepage": "https://github.com/yourusername/teamclaw#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/teamclaw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/teamclaw/issues"
+  },
+  "keywords": [
+    "multiple-ai-agents",
+    "simple-chat",
+    "collaborative-workspace",
+    "ai-team",
+    "openclaw",
+    "multi-agent",
+    "chat",
+    "simple",
+    "collaboration",
+    "workspace",
+    "agents",
+    "team-chat"
+  ],
+  "license": "MIT",
   "scripts": {
     "build": "pnpm -r run build",
     "check": "pnpm -r run build",
