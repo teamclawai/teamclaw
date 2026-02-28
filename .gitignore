@@ -42,7 +42,7 @@ next-env.d.ts
 
 # local config
 config/local.json
-packages/*/config/local.json
+packages/config/local.json
 
 # local data
 packages/gateway/data/
