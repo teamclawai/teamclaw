@@ -12,6 +12,7 @@ packages/*/node_modules/
 packages/*/.next/
 out/
 dist/
+packages/*/dist/
 
 # production
 /build
